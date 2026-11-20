@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Tanıtım videosu</title>
+<script src="tema.js"></script>
+<script>
+  // yazı tipi: önce yerel dosya (tema.font.yerel: [{agirlik, dosya}]), yoksa Google Fonts
+  (function () {
+    const f = window.TEMA.font || {};
+    if (f.yerel && f.yerel.length) {
+      const st = document.createElement('style');
+      st.textContent = f.yerel.map(y => `@font-face{font-family:'${f.aile}';font-weight:${y.agirlik};src:url('${y.dosya}');font-display:block}`).join('\n');
+      document.head.appendChild(st);
+    } else if (f.google) {
+      const l = document.createElement('link'); l.rel = 'stylesheet';
+      l.href = 'https://fonts.googleapis.com/css2?family=' + f.google + '&display=block';
+      document.head.appendChild(l);
+    }
+  })();
+</script>
+<style>
+* { box-sizing: border-box; transition: none !important; animation: none !important; }
+html, body { margin: 0; padding: 0; background: #000; }
+#sahne { position: relative; overflow: hidden; background: var(--zemin); font-family: var(--font); color: var(--murekkep);
+  -webkit-font-smoothing: antialiased; }
+.katman { position: absolute; inset: 0; }
+.abs { position: absolute; }
+.aurora { position: absolute; border-radius: 50%; filter: blur(50px); will-change: transform; }
+#izgara { position: absolute; inset: -10%; opacity: .09; background-image: radial-gradient(var(--murekkep) 1.3px, transparent 1.5px); background-size: 46px 46px; }
+#vinyet { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 55%, var(--golge2) 100%); opacity: .45; }
+#gren { position: absolute; inset: 0; opacity: .025; }
+.baslik { position: absolute; font-weight: 800; letter-spacing: -0.035em; line-height: 1.04; color: var(--murekkep); }
+.baslik .k { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 .02em .14em; margin-bottom: -.14em; }
+.baslik .k > i { display: inline-block; font-style: normal; will-change: transform, filter; }
+.vurgu > i { background: var(--vurgu-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.vurgu-k > i { background: var(--hata-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tuval { position: absolute; left: 0; top: 0; width: 1000px; height: 760px; transform-origin: 0 0; }
+.kart { position: absolute; background: var(--yuzey); border-radius: var(--kose); color: var(--murekkep);
+  box-shadow: 0 40px 80px -30px var(--golge), 0 14px 30px -14px var(--golge2), 0 0 0 1px var(--cizgi); }
+#altyazi { position: absolute; display: flex; justify-content: center; }
+#altyazi .kutu { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 0 .28em; padding: .32em .7em .38em; border-radius: .5em;
+  background: var(--altyazi-zemin); box-shadow: 0 14px 30px -14px var(--golge); font-weight: 700; letter-spacing: -0.01em; }
+#logo { position: absolute; display: flex; align-items: center; gap: .32em; font-weight: 800; letter-spacing: .02em; color: var(--murekkep); }
+#logo span b { font-weight: 500; letter-spacing: .04em; }
+.cta { display: inline-flex; align-items: center; gap: .5em; padding: .7em 1.4em; border-radius: 999px; background: var(--cta-grad); color: #fff;
+  font-weight: 800; letter-spacing: -0.01em; box-shadow: 0 22px 44px -14px var(--cta-golge), 0 0 0 1px rgba(255,255,255,.25) inset; }
+</style>
+</head>
+<body>
+<div id="sahne">
+  <div id="arka" class="katman"><div id="izgara"></div></div>
+  <div id="icerik" class="katman"></div>
+  <div id="kapanis" class="katman"></div>
+  <div id="ust" class="katman"><div id="logo"></div><div id="altyazi"></div></div>
+  <div id="vinyet"></div>
+  <canvas id="gren"></canvas>
+</div>
+<script src="ikonlar.js"></script>
+<script src="kelimeler.js"></script>
+<script src="motor.js"></script>
+<script src="sahneler.js"></script>
+<script src="icerik.js"></script>
+</body>
+</html>

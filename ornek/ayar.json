@@ -1,0 +1,13 @@
+{
+  "kodek": "x264",
+  "gpu": true,
+  "tarayici": "chrome",
+  "teslim": {
+    "ad": "marka-tanitim",
+    "baslik": "Marka tanıtım videoları",
+    "hedef": null,
+    "liste": [
+      ["R1", "tahsilat", "Tahsilat takibi (15 sn)"]
+    ]
+  }
+}
