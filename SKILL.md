@@ -45,7 +45,7 @@ Ardından tema doğrulaması: `kelime-tahmin.mjs` ile taslak zamanlar → `ornek
 ### 4. Senaryo
 `SENARYO.md`'ye her video için tablo yaz: **Başlık** (ekranda, `*vurgu*`) · **Görüntü** (hangi sahne, ne olur) · **Seslendirme** (TTS okunuşuyla).
 - 15 sn reklam: sorun → çözüm → sonuç → kapanış ("… için hemen başvurun!" gibi çağrı). 25–30 kelime, 3 sahne.
-- 1 dk film: 9 sahne, ~95–100 kelime; açılışta sorun, ortada 5–6 özellik, sonda marka sahnesi + çağrı.
+- 1 dk film: 9 sahne, ~105–112 kelime (sahne arası boşluk kısa, ≤0,5 sn); açılışta sorun, ortada 5–6 özellik, sonda marka sahnesi + çağrı.
 - Bir video bir konu. Fayda anlat, teknik ayrıntıya girme. Her iddia `urun.md`'de olsun.
 Metinleri kullanıcıya göster ve onay al.
 
@@ -59,10 +59,10 @@ Metinleri kullanıcıya göster ve onay al.
 `node betik/render.mjs R1 9x16 onizleme 1.5,6,11` → `onizleme/`; `node betik/temas.mjs onizleme/temas.png 4 300 <kareler…>` ile tek görsel yap, Read ile bak. Her sahneden bir kare, en az iki oran (9:16 ve 16:9). Hataları düzelt (üst üste binen başlıklar çoğu zaman aynı kelimenin ikinci geçişini `T('kelime', 1)` ile almamaktan olur), sonra kullanıcıya göster.
 
 ### 8. Video
-Her video × oran: `node betik/render.mjs <KOD> <oran> video 6` → `node betik/ses.mjs <KOD> <oran>`. Uzun işlerde arka planda çalıştır. Sonra `references/kalite.md` kontrol listesi (süre, LUFS, renk, iddialar).
+Her video × oran: `node betik/render.mjs <KOD> <oran> video 6` → `node betik/ses.mjs <KOD> <oran>` (sonunda `son-isle.mjs` kendiliğinden çalışır: ses yüksekliği -14 LUFS'e oturur, bt709 renk etiketleri yazılır). Uzun işlerde arka planda çalıştır. Sonra `references/kalite.md` kontrol listesi (süre, LUFS, renk, iddialar).
 
 ### 9. Teslim
-`ayar.json → teslim.liste`'ye videoları yapılış sırasıyla ekle (yeni olan sona), `node betik/teslim.mjs`. Numaralı klasörler, `ICERIK.md`, `KAYNAKLAR.md`, isteğe bağlı masaüstü kopyası + zip. Kullanıcıya bir dikey örneği `SendUserFile` ile gönder; seslendirmeleri kulakla dinlemesini hatırlat.
+`ayar.json → teslim.liste`'ye videoları yapılış sırasıyla ekle (yeni olan sona), `node betik/teslim.mjs`. Numaralı klasörler, `ICERIK.md` (proje kökünde `ICERIK-EK.md` varsa sonuna eklenir: seslendirme metni, sahneler, kurgusal veri notu), `KAYNAKLAR.md`, isteğe bağlı masaüstü kopyası + zip. Kullanıcıya bir dikey örneği `SendUserFile` ile gönder; seslendirmeleri kulakla dinlemesini hatırlat.
 
 ### 10. Know-how'ı güncelle (her projenin son adımı)
 Bu projede ne ters gitti, kullanıcı neyi düzeltti, hangi çözüm işe yaradı? Her birini `references/know-how.md`'de ilgili başlığa **belirti → neden → çözüm** olarak, tarih ve proje adıyla ekle. Zaten varsa yeni madde açma, mevcut maddeye örnek ekle. Bir tuzak tekrarlanıyorsa betiğe/motora kalıcı çözüm koymayı düşün ve maddeye "çözüldü: …" yaz. Kullanıcıya teslim özetinde "know-how'a eklenenler" satırını göster. Yeni bir şey yoksa bunu da söyle. Skill bir git deposuysa ortak know-how'a göndermeyi öner; kullanıcı onaylarsa: `git pull --rebase`, `git add references/know-how.md`, `git commit -m "know-how: …"`, `git push`. Onaysız commit/push yapma.
@@ -76,7 +76,7 @@ Bu projede ne ters gitti, kullanıcı neyi düzeltti, hangi çözüm işe yarad�
 
 ## Dosyalar
 - `motor/` — index.html, motor.js (tema, yerleşim, başlık, altyazı, kapanış), sahneler.js (kütüphane + Film), ikonlar.js
-- `scripts/` — kur, render, ses, kelimeler, kelime-tahmin, temas, teslim, ekran-al, svg-kirp, ikon-uret, tema-cikar.js (tarayıcıda çalışır)
+- `scripts/` — kur, render, ses, son-isle, kelimeler, kelime-tahmin, temas, teslim, ekran-al, svg-kirp, ikon-uret, tema-cikar.js (tarayıcıda çalışır)
 - `references/` — **know-how** (tuzaklar ve çözümler, her projede okunur ve büyür), tema-analizi, sahne-kutuphanesi, seslendirme, kalite
 - `ajan/tanitim-uretici.md` — üretim ajanı tanımı (`scripts/kurulum.mjs` ile `~/.claude/agents/`a kopyalanır; ajanı değiştirirsen burada değiştir ve kurulumu yeniden çalıştır)
 - `README.md` — insanlar için kurulum ve paylaşım

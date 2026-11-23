@@ -21,7 +21,7 @@ Her üretim kredi harcar (~1 kredi/karakter). **Metin onayı alınmadan ses üre
 
 ## Süre
 - **Reklam (R…)**: hedef ≤15 sn. Ham ses ~15,7 sn'ye kadar motor ≤%10 hızlandırarak sığdırır. Ham ses 16,5 sn'yi geçerse metni kısalt ve kullanıcıya sor (eski sesi `ses/eski/` altına sakla). Ölçü: ~2,0–2,2 kelime/sn → 15 sn reklam ≈ 25–30 kelime (kapanış cümlesi dahil).
-- **Film**: 60 sn için ~95–100 kelime. Sesler genelde 45–50 sn gelir; `kelimeler.mjs --sahne` her sahne başına ≤1,6 sn boşluk ekleyip filmi ~59 sn'ye taşır (ses hızlanmaz).
+- **Film**: ~1 dk için ~105–112 kelime (104 kelime → ham ~50,7 sn → film 55,9 sn). `kelimeler.mjs --sahne` sahne başlarına en fazla 0,5 sn boşluk ekler (`--enfazla`, varsayılan 0,5); film doğal süresinde kalır, 60 sn'ye zorla yayılmaz — 1,2 sn+ boşluk "cümleler arası çok uzun" bulundu. Film kısa kalırsa boşluğu büyütme, metne bir cümle ekle (ses hızlanmaz).
 - Sahne başı kelimeleri ham kelime listesindeki biçimiyle yaz (okunuş: "Fest", ekran yazımı değil).
 
 ## Taslak önizleme (kredisiz)

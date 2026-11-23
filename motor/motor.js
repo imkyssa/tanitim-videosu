@@ -199,8 +199,9 @@
     css(yigin, { left: 0, top: 0, width: W + 'px', height: H + 'px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' });
     const isik = $('div', 'abs', k);
     const amblem = $('div', null, yigin);
-    const yuv = TM.logoYuvarlak === false ? '18%' : '50%', aw = 220 * sk * (TM.logoOran || 1);
-    css(amblem, { width: aw + 'px', height: 220 * sk + 'px', borderRadius: yuv, position: 'relative', display: TM.logo ? 'flex' : 'none', alignItems: 'center', justifyContent: 'center' });
+    // TM.logoAzami (px, logo yüksekliği): küçük raster logoyu kapanışta doğal boyunun çok üstüne büyütmemek için üst sınır
+    const lh = Math.min(220 * sk, TM.logoAzami || 9e9), yuv = TM.logoYuvarlak === false ? '18%' : '50%', aw = lh * (TM.logoOran || 1);
+    css(amblem, { width: aw + 'px', height: lh + 'px', borderRadius: yuv, position: 'relative', display: TM.logo ? 'flex' : 'none', alignItems: 'center', justifyContent: 'center' });
     amblem.innerHTML = `<div style="position:absolute;inset:-30%;border-radius:50%;background:radial-gradient(closest-side,${saydam(RK.ana, .22)},${saydam(RK.ana, 0)})"></div>
       ${logoImg(`position:relative;width:100%;height:100%;object-fit:contain;border-radius:${yuv};${TM.logoYuvarlak === false ? '' : `box-shadow:0 0 0 ${6 * sk}px ${saydam(RK.yuzey, .9)},0 30px 70px -20px var(--golge)`}`)}`;
     const ad = $('div', null, yigin, Array.isArray(TM.logoMetin) ? `${TM.logoMetin[0]} <span style="font-weight:500;letter-spacing:.06em">${TM.logoMetin[1] || ''}</span>` : (TM.logoMetin ?? TM.ad));

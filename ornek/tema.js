@@ -5,6 +5,7 @@ window.TEMA = {
   logo: 'marka/logo.png',                   // marka/ altındaki dosya; yoksa null (baş harflerle rozet çizilir)
   logoYuvarlak: true,                       // yuvarlak amblem mi (kare/yatay logolarda false)
   logoOran: 1,                              // genişlik/yükseklik (yatay logo için ör. 3.2)
+  // logoAzami: 140,                       // küçük raster logo (ör. 128 px) için logo yüksekliği üst sınırı (px); kapanışta bulanık büyümesin
   slogan: 'Mali müşavirler için <b>dijital ofis</b>',
   cta: 'Ücretsiz demo iste',                // kapanış düğmesi (sitedeki ana çağrıyla aynı olsun)
   adres: 'fastmusavir.com',

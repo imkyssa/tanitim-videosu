@@ -1,7 +1,8 @@
 // Scribe kelime zamanlarını kelimeler.js'e yazar; okunuşları ekran yazımına çevirir (tema.js → TEMA.yazim, TEMA.birlesik).
 // Film için sahne başlarına boşluk ekleyip sesi yeniden kurar (görsellere nefes, filmi hedef süreye taşır).
 //   node <skill>/scripts/kelimeler.mjs R1                          → ses/R1.mp3 = ses/ham/R1.mp3, kelimeler.js[R1]
-//   node <skill>/scripts/kelimeler.mjs T1 --sahne "Fest,Müşterileri,…" [--hedef 59.5] [--enfazla 1.6]
+//   node <skill>/scripts/kelimeler.mjs T1 --sahne "Fest,Müşterileri,…" [--hedef 59.5] [--enfazla 0.5]
+//   Boşluk sahne başına en fazla --enfazla sn (varsayılan 0,5): 1,2 sn+ boşluk "cümleler arası çok uzun" bulundu; film doğal süresinde kalır.
 // Girdi: ses/ham/<R>.mp3 ve ses/ham/<R>-kelimeler.json (Scribe words.json: {words:[{text,type,start,end}]} ya da düz dizi).
 import fs from 'node:fs';
 import vm from 'node:vm';
@@ -20,7 +21,7 @@ const ham = (Array.isArray(ham0) ? ham0 : ham0.words).filter(w => !w.type || w.t
 const sesSure = ham[ham.length - 1].end;
 const sahne = arg('sahne') ? arg('sahne').split(',').map(s => s.trim()) : [];
 const bas = []; { let j = 0; for (const k of sahne) { while (j < ham.length && ham[j].text.replace(/[.,;:!?]+$/, '') !== k.replace(/[.,;:!?]+$/, '')) j++; if (j >= ham.length) throw new Error('sahne kelimesi yok: ' + k); bas.push(j); j++; } }
-const hedef = +(arg('hedef') || 59.5), enFazla = +(arg('enfazla') || 1.6);
+const hedef = +(arg('hedef') || 59.5), enFazla = +(arg('enfazla') || 0.5);
 const bosluk = bas.length ? Math.max(0, Math.min(enFazla, (hedef - 1.2 - sesSure) / bas.length)) : 0;
 const kes = bas.map(i => (ham[i - 1].end + ham[i].start) / 2);
 

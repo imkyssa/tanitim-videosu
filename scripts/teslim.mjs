@@ -47,7 +47,7 @@ ${satirlar.join('\n')}
 | \`yatay-16x9\` | 1920×1080 | YouTube, Google Ads video, web sitesi, sunum |
 
 Hepsi H.264 MP4, 30 fps, ses -14 LUFS. Altyazı videoya gömülü.${fs.existsSync('KAYNAKLAR.md') ? ' Müzik, efekt ve yazı tipi kaynakları: `KAYNAKLAR.md`.' : ''}
-`);
+${fs.existsSync('ICERIK-EK.md') ? '\n' + fs.readFileSync('ICERIK-EK.md', 'utf8') : ''}`);   // proje eki: ICERIK-EK.md varsa ICERIK.md'nin sonuna eklenir (seslendirme metni, sahneler, iddialar)
 console.log(`${T.liste.length} klasör, ${T.liste.length * oranlar.length} video → ${kok}/`);
 
 if (T.hedef) {

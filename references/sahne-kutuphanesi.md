@@ -40,7 +40,7 @@ FILMLER.R3 = function (M) {
 | `zamanli` | Gece → sabah, telefonda rapor | `isler [metin]`, `rapor {baslik, metin}`, `tSabah`, `tRapor` (ton 1→2 ile kullan) |
 | `kanban` | Pano, kart son sütuna taşınır | `kolonlar [[ad, renk]]`, `isler [[kolon, sıra, ad, alt, [kısaltma, renk]]]`, `tTasi`, `tekrar`, `alarm` |
 | `sayaclar` | 3 sayaç + durum listesi, bir satır güncellenir | `sayaclar [[ad, değer, renk, ik]]`, `birim`, `satirlar`, `guncelle {satir, t, deger, durum, renk, fark}`, `fis` |
-| `gonder` | Satırlar seçilir, kanal düğmeleri, simgeler uçar | `satirlar [[k, belge, tutar]]`, `kanallar [[ik, ad, renk]]` (1–2), `tSec`, `tKanal [an]` |
+| `gonder` | Satırlar seçilir, kanal düğmeleri, simgeler uçar | `satirlar [[k, belge, tutar, atla]]` (atla verilirse — ör. `'Eksik'` — satır seçilmez, gönderilmez, hata çipiyle görünür), `durumCip` (tutar sütunu başarı çipi, ör. `'Hazır'`), `tEksik` (atlanan satırın vurgulandığı an), `kanallar [[ik, ad, renk]]` (1–2), `tSec`, `tKanal [an]` |
 | `mesaj` | Telefonda istek, belgeler iletilir | `kisi`, `metin`, `belgeler`, `dugme`, `tMesaj`, `tGonder` |
 | `baglan` | Hizmet kartları → bağlandı; isteğe bağlı kilit | `kartlar [[ad, ik, renk]]` (4), `tTik`, `metinler`, `kilit {t, etiket}` |
 | `cep` | Telefon + uygulama listesi + bildirim (+ mağaza) | `liste [[ik, ad, değer]]`, `bildirim`, `tBildirim`, `magaza {tIos, tAndroid}` |

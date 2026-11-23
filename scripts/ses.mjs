@@ -1,8 +1,9 @@
 // Seslendirme + müzik (seslendirmede kısılır) + efektler → görüntüyle birleştirir (proje klasöründen):
 //   node <skill>/scripts/ses.mjs R1 9x16   → out/R1-9x16.mp4  (out/R1-9x16-sessiz.mp4 ve -ses.json gerekir)
-// Ses -14 LUFS'e (sosyal medya) normalize edilir. Müzik muzik/<ad>.mp3, efektler sfx/<ad>.mp3.
+// Ses -14 LUFS'e (sosyal medya) normalize edilir; sonunda son-isle.mjs (hedef denetimi + bt709 etiketi) çalışır. Müzik muzik/<ad>.mp3, efektler sfx/<ad>.mp3.
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { FF } from './ortak.mjs';
 
 const [R, O] = process.argv.slice(2);
@@ -43,8 +44,11 @@ for (const [ad, t, g] of S.sfx) {
 }
 const karis = mz.dosya !== false ? '[vo][mz]' : '[vo]';
 const adet = (mz.dosya !== false ? 2 : 1) + efekt.length;
-f.push(`${karis}${efekt.join('')}amix=inputs=${adet}:normalize=0:dropout_transition=0,atrim=0:${D},loudnorm=I=-14:TP=-1.5:LRA=9[ses]`);
+f.push(`${karis}${efekt.join('')}amix=inputs=${adet}:normalize=0:dropout_transition=0,atrim=0:${D},aresample=async=1:first_pts=0,loudnorm=I=-14:TP=-1.5:LRA=9[ses]`);   // first_pts=0: karışım adelay'li seslendirmeden değil 0'dan başlasın (müzik girişi düşmesin)
 const cikti = `out/${R}-${O}.mp4`;
 const r = spawnSync(FF, ['-v', 'error', '-y', ...girdi, '-filter_complex', f.join(';'), '-map', '0:v', '-map', '[ses]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-movflags', '+faststart', '-shortest', cikti], { stdio: 'inherit' });
-console.log(r.status === 0 ? 'hazır: ' + cikti : 'HATA');
-process.exit(r.status);
+if (r.status !== 0) { console.log('HATA'); process.exit(r.status); }
+// Son işlem: ses yüksekliğini hedefe oturt (gerekirse iki geçiş) ve bt709 renk etiketlerini yaz (ffmpeg 9'da render etiketi boş bırakabiliyor)
+const s = spawnSync(process.execPath, [fileURLToPath(new URL('./son-isle.mjs', import.meta.url)), R, O], { stdio: 'inherit' });
+console.log(s.status === 0 ? 'hazır: ' + cikti : 'HATA (son işlem)');
+process.exit(s.status);

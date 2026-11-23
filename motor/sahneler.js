@@ -55,7 +55,8 @@
     const centik = M.$('div', 'abs', ekran); M.css(centik, { left: '50%', top: w * .03 + 'px', width: w * .32 + 'px', height: w * .075 + 'px', marginLeft: -w * .16 + 'px', borderRadius: '999px', background: R.telefon || '#0B1020' });
     return { g, ekran };
   }
-  const logoGen = (M, boy, enFazla = 9e9) => Math.min(boy * (M.TEMA.logoOran || 1), enFazla);
+  // TEMA.logoAzami: logo yüksekliği üst sınırı (tuval px; küçük raster logo bulanık büyümesin)
+  const logoGen = (M, boy, enFazla = 9e9) => Math.min(Math.min(boy, M.TEMA.logoAzami || 9e9) * (M.TEMA.logoOran || 1), enFazla);
   const logoImg = (M, boy, stil = '', enFazla = 9e9) => M.TEMA.logo ? `<img src="${M.TEMA.logo}" style="width:${logoGen(M, boy, enFazla)}px;height:${logoGen(M, boy, enFazla) / (M.TEMA.logoOran || 1)}px;object-fit:contain;border-radius:${M.TEMA.logoYuvarlak === false ? '18%' : '50%'};${stil}">`
     : `<div style="width:${boy}px;height:${boy}px;border-radius:50%;background:var(--cta-grad);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:${boy * .4}px;${stil}">${(M.TEMA.ad || '?').slice(0, 2)}</div>`;
   function panel(M, eb, x, y, w, h, ik, renk, baslik, alt) {
@@ -290,13 +291,16 @@
     const [kb1, kb2] = o.kolonlar || ['Belge', 'Tutar'];
     basliklar(M, p, 112, [['', 36, 30], [o.kayitBaslik || 'Kayıt', 84, 300], [kb1, 400, 200], [kb2, 600, 150, 'right'], [o.kanalBaslik || 'Kanal', 790, 140, 'center']]);
     const K = o.kanallar;
-    const rs = o.satirlar.slice(0, 5).map(([kk, tur, tutar], i) => { const e = satir(M, p, 156 + i * 84, 82, kk); e.firstChild.style.left = '64px';
+    // satır: [kayıt, belge, tutar, atla] — atla (ör. 'Eksik') verilirse satır seçilmez, gönderilmez, durumu hata çipiyle görünür; o.tEksik'te vurgulanır.
+    // o.durumCip: true ise tutar sütunu başarı çipi olarak çizilir (ör. 'Hazır').
+    const rs = o.satirlar.slice(0, 5).map(([kk, tur, tutar, atla], i) => { const e = satir(M, p, 156 + i * 84, 82, kk); e.firstChild.style.left = '64px';
       const kut = M.$('div', 'abs', e); M.css(kut, { left: '16px', top: '27px', width: '28px', height: '28px', borderRadius: '8px', border: `2px solid ${R.cizgi}`, display: 'flex', alignItems: 'center', justifyContent: 'center' });
       hucre(M, e, 400, 200, 82, 'left').innerHTML = `<span style="padding:6px 12px;border-radius:999px;background:${R.acik(R.soluk, .85)};color:${R.ikincil};font-size:18px;font-weight:800">${tur}</span>`;
-      hucre(M, e, 600, 150, 82, 'right').textContent = tutar;
+      const hd = hucre(M, e, 600, 150, 82, 'right');
+      if (atla) hd.innerHTML = cip(M, 'hata', 'alert-triangle', atla, 17); else if (o.durumCip) hd.innerHTML = cip(M, 'basari', 'circle-check', tutar, 17); else hd.textContent = tutar;
       const gk = hucre(M, e, 790, 140, 82);
-      gk.innerHTML = K.map(([ik]) => `<span class="kn" style="width:30px;height:30px;border-radius:50%;background:${R.acik(R.soluk, .85)};display:inline-flex;align-items:center;justify-content:center">${M.ikon(ik, R.soluk, 17, 2.4)}</span>`).join('');
-      return { el: e, kut, kn: [...gk.querySelectorAll('.kn')] }; });
+      gk.innerHTML = K.map(([ik]) => `<span class="kn" style="width:30px;height:30px;border-radius:50%;background:${R.acik(R.soluk, .85)};display:inline-flex;align-items:center;justify-content:center">${atla ? '' : M.ikon(ik, R.soluk, 17, 2.4)}</span>`).join('').replace(atla ? /background:[^;]+;/g : /$^/, atla ? `border:2px dashed ${R.cizgi};` : '');
+      return { el: e, kut, atla: !!atla, kn: [...gk.querySelectorAll('.kn')] }; });
     const dw = K.length === 1 ? 880 : 430;
     const dg = K.map(([ik, ad, r], i) => { const e = kutu(M, p, 40 + i * 450, 600, dw, 110, 'abs'); M.css(e, { borderRadius: '20px', border: `2px solid ${R.saydam(rk(M, r), .2)}`, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '14px', fontWeight: 800, fontSize: '30px' }); return { el: e, ik, ad, r: rk(M, r) }; });
     const ucan = K.map(([ik, , r]) => rs.map(() => { const e = M.$('div', 'abs', k, `<div style="width:42px;height:42px;border-radius:50%;background:${rk(M, r)};display:flex;align-items:center;justify-content:center">${M.ikon(ik, '#fff', 22, 2.4)}</div>`); M.css(e, { zIndex: 6 }); return e; }));
@@ -304,11 +308,14 @@
     M.SFX.push(['ui-button-click', o.tSec, -10], ...tK.map(x => ['ui-button-click', x, -8]), ...tK.map(x => ['hi-speed-electronic-whoosh-1-wav', x + .15, -18]));
     return { k, ciz(t) {
       rs.forEach((r, i) => { const g = M.E.expo(M.P(t, o.t0 + .15 + i * .07, .6)); M.css(r.el, { opacity: g, transform: `translateX(${(1 - g) * 40}px)` });
+        if (r.atla) { const tv0 = o.tEksik == null ? Infinity : o.tEksik, v = t >= tv0 ? M.E.ui(M.P(t, tv0, .4)) : 0, nb = v ? Math.sin((t - tv0) * 7) * .5 + .5 : 0;
+          r.kut.style.background = 'transparent'; r.kut.style.borderColor = R.cizgi; set(r.kut, '');
+          r.el.style.background = v ? R.acik(R.hata, 1 - .12 * v) : 'transparent'; r.el.style.boxShadow = v ? `0 0 0 ${2 + nb * 4}px ${R.saydam(R.hata, .3 * v)}` : 'none'; return; }
         const sec = t >= o.tSec + i * .05; r.kut.style.background = sec ? R.ana : 'transparent'; r.kut.style.borderColor = sec ? R.ana : R.cizgi; set(r.kut, sec ? M.ikon('check', '#fff', 20, 3.2) : '');
         r.el.style.background = sec ? R.acik(R.ana, .93) : 'transparent';
         r.kn.forEach((x, j) => { const ok = t >= tK[j] + .45 + i * .05; x.style.background = ok ? rk(M, K[j][2]) : R.acik(R.soluk, .85); set(x, M.ikon(K[j][0], ok ? '#fff' : R.soluk, 17, 2.4)); }); });
       dg.forEach((d, i) => { const g = M.E.expo(M.P(t, o.t0 + .3 + i * .1, .5)), ak = t >= tK[i]; M.css(d.el, { opacity: g, transform: `translateY(${(1 - g) * 30}px) scale(${1 - basma(t, tK[i]) * .05})`, background: ak ? d.r : R.yuzey, color: ak ? '#fff' : d.r }); set(d.el, `${M.ikon(d.ik, ak ? '#fff' : d.r, 40, 2.2)}${d.ad}`);
-        ucan[i].forEach((u, j) => { const q = M.P(t, tK[i] + .1 + j * .06, .45), qq = M.E.inout(q); const sx = 20 + 40 + i * 450 + dw / 2, sy = 660, hx = 20 + 20 + 790 + 50, hy = 156 + j * 84 + 41; M.css(u, { left: M.lerp(sx, hx, qq) - 21 + 'px', top: M.lerp(sy, hy, qq) - 21 - Math.sin(qq * Math.PI) * 120 + 'px', opacity: q > 0 && q < 1 ? 1 : 0, transform: `scale(${1 - qq * .4})` }); }); });
+        ucan[i].forEach((u, j) => { if (rs[j].atla) { u.style.opacity = 0; return; } const q = M.P(t, tK[i] + .1 + j * .06, .45), qq = M.E.inout(q); const sx = 20 + 40 + i * 450 + dw / 2, sy = 660, hx = 20 + 20 + 790 + 50, hy = 156 + j * 84 + 41; M.css(u, { left: M.lerp(sx, hx, qq) - 21 + 'px', top: M.lerp(sy, hy, qq) - 21 - Math.sin(qq * Math.PI) * 120 + 'px', opacity: q > 0 && q < 1 ? 1 : 0, transform: `scale(${1 - qq * .4})` }); }); });
       const yol = [[o.tSec - .5, 500, 760], [o.tSec - .05, 70, 197], ...tK.map((x, i) => [x - .05, 60 + i * 450 + dw / 2, 670]), [tK.at(-1) + .6, 860, 760]];
       im(t, yol, [o.tSec, ...tK], clamp((t - o.tSec + .5) * 3) * (1 - clamp((t - tK.at(-1) - .5) * 3)));
     } };
